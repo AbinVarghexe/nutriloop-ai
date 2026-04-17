@@ -1,0 +1,23 @@
+[project]
+name = "nutriloop-ai"
+version = "0.1.0"
+description = "Food demand forecasting with Prophet, cold-start clustering, and news adjustment"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.118",
+    "uvicorn[standard]>=0.30",
+    "prophet>=1.1",
+    "scikit-learn>=1.5",
+    "pandas>=2.2",
+    "numpy>=2.0",
+    "joblib>=1.5",
+    "supabase>=2.0",
+    "python-dotenv>=1.0",
+    "httpx>=0.28",
+    "huggingface_hub>=0.20",
+    "holidays>=0.50",
+    "requests>=2.32",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
