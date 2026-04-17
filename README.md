@@ -1,36 +1,7 @@
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository
-2. Create a new branch for your feature or bugfix
-3. Make your changes and add tests if applicable
-4. Submit a pull request with a clear description
-
-Please follow the existing code style and add documentation where needed.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact & Support
-
-For questions, issues, or feature requests, please open an issue on GitHub or contact the maintainer:
-
-- GitHub Issues: https://github.com/your-username/nutriloop-ai/issues
-- Email: your.email@example.com
-
-## Acknowledgements
-
-- [Facebook Prophet](https://facebook.github.io/prophet/)
-- [scikit-learn](https://scikit-learn.org/)
-- [Supabase](https://supabase.com/)
-- [Hugging Face Spaces](https://huggingface.co/spaces)
-- [NewsAPI](https://newsapi.org/)
 ---
 title: NutriLoop AI
 emoji: 🍱
-colorFrom: teal
+colorFrom: blue
 colorTo: green
 sdk: docker
 app_port: 7860
@@ -307,4 +278,32 @@ nutriloop-ai/
 - **Model Registry**: joblib + JSON
 - **Model Storage**: Hugging Face Spaces
 - **CI/CD**: GitHub Actions
-- **Hosting**: Hugging Face Spaces (Docker)
+- **Hosting**: Hugging Face Spaces (Docker)## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature or bugfix
+3. Make your changes and add tests if applicable
+4. Submit a pull request with a clear description
+
+Please follow the existing code style and add documentation where needed.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact & Support
+
+For questions, issues, or feature requests, please open an issue on GitHub or contact the maintainer:
+
+- GitHub Issues: https://github.com/your-username/nutriloop-ai/issues
+- Email: your.email@example.com
+
+## Acknowledgements
+
+- [Facebook Prophet](https://facebook.github.io/prophet/)
+- [scikit-learn](https://scikit-learn.org/)
+- [Supabase](https://supabase.com/)
+- [Hugging Face Spaces](https://huggingface.co/spaces)
+- [NewsAPI](https://newsapi.org/)
