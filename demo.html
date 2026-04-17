@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriLoop AI • Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8 text-sm md:text-base">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="flex items-center justify-between glass p-6 rounded-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 transform translate-x-1/2 -translate-y-1/2"></div>
+            <div>
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-indigo-400">NutriLoop AI</h1>
+                <p class="text-slate-400 mt-1">Global Multivariate Forecasting Engine Demo</p>
+            </div>
+            
+            <div class="flex items-center space-x-3 bg-slate-900/50 px-4 py-2 rounded-xl border border-slate-700">
+                <div id="statusIndicator" class="w-3 h-3 rounded-full bg-slate-500"></div>
+                <span id="healthText" class="font-medium text-slate-300">Checking...</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Predict Section -->
+            <section class="glass p-6 rounded-2xl flex flex-col space-y-6">
+                <h2 class="text-xl font-semibold border-b border-white/10 pb-3 text-teal-300">Predict Demand (Existing)</h2>
+                
+                <form id="predictForm" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Restaurant ID</label>
+                            <input type="text" id="p_restId" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-teal-500 transition-colors" value="test_restaurant_001" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Item Name</label>
+                            <input type="text" id="p_item" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-teal-500 transition-colors" value="biriyani" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">City (News Adj)</label>
+                            <input type="text" id="p_city" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-teal-500 transition-colors" value="Kochi" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Forecast Days</label>
+                            <input type="number" id="p_days" min="1" max="30" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-teal-500 transition-colors" value="7" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-lg bg-gradient-to-r from-teal-500 to-indigo-500 hover:from-teal-400 hover:to-indigo-400 text-white font-semibold shadow-lg shadow-teal-500/25 transition-all transform hover:-translate-y-0.5">Generate Forecast</button>
+                </form>
+
+                <div class="flex-grow flex flex-col">
+                    <h3 class="text-xs text-slate-400 uppercase tracking-wider mb-2">JSON Response</h3>
+                    <pre id="p_result" class="flex-grow bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-teal-200 overflow-y-auto max-h-64 text-xs font-mono"></pre>
+                </div>
+            </section>
+
+            <!-- Cold Start Section -->
+            <section class="glass p-6 rounded-2xl flex flex-col space-y-6">
+                <h2 class="text-xl font-semibold border-b border-white/10 pb-3 text-indigo-300">Cold-Start Demand (New)</h2>
+                
+                <form id="coldForm" class="space-y-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Target Item</label>
+                            <input type="text" id="c_item" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="puttu" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Cuisine Type</label>
+                            <input type="text" id="c_cuisine" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="indian" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Avg Daily Qty</label>
+                            <input type="number" id="c_avg" step="0.1" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="25.0" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Latitude</label>
+                            <input type="number" id="c_lat" step="0.0001" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="9.9312" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">Longitude</label>
+                            <input type="number" id="c_lon" step="0.0001" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="76.2673" required>
+                        </div>
+                         <div>
+                            <label class="block text-xs text-slate-400 uppercase tracking-wider mb-1">City (News)</label>
+                            <input type="text" id="c_city" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-indigo-500 transition-colors" value="Kochi" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5">Generate Cold-Start</button>
+                </form>
+
+                <div class="flex-grow flex flex-col">
+                    <h3 class="text-xs text-slate-400 uppercase tracking-wider mb-2">JSON Response</h3>
+                    <pre id="c_result" class="flex-grow bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-indigo-200 overflow-y-auto max-h-64 text-xs font-mono"></pre>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:7860';
+
+        // Health Check
+        async function checkHealth() {
+            try {
+                const res = await fetch(`${API_URL}/health`);
+                const data = await res.json();
+                
+                const dot = document.getElementById('statusIndicator');
+                const txt = document.getElementById('healthText');
+                
+                if (data.status === 'ok') {
+                    dot.className = 'w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse-slow';
+                    txt.textContent = `Online (Global Model: ${data.global_model_present ? 'Ready' : 'Missing'})`;
+                } else {
+                    dot.className = 'w-3 h-3 rounded-full bg-red-500';
+                    txt.textContent = 'Degraded';
+                }
+            } catch (err) {
+                document.getElementById('statusIndicator').className = 'w-3 h-3 rounded-full bg-red-500';
+                document.getElementById('healthText').textContent = 'Server Offline';
+            }
+        }
+
+        // Generate Predict
+        document.getElementById('predictForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resultBox = document.getElementById('p_result');
+            resultBox.textContent = 'Processing Global Multivariate Engine...';
+            
+            try {
+                const res = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        restaurant_id: document.getElementById('p_restId').value,
+                        item_name: document.getElementById('p_item').value,
+                        city: document.getElementById('p_city').value,
+                        days: parseInt(document.getElementById('p_days').value)
+                    })
+                });
+                const data = await res.json();
+                resultBox.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultBox.textContent = `Error: ${err.message}`;
+            }
+        });
+
+        // Generate Cold Start
+        document.getElementById('coldForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resultBox = document.getElementById('c_result');
+            resultBox.textContent = 'Processing Spatial Clustering...';
+            
+            try {
+                const res = await fetch(`${API_URL}/cold-start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        item_name: document.getElementById('c_item').value,
+                        cuisine_type: document.getElementById('c_cuisine').value,
+                        avg_daily_quantity: parseFloat(document.getElementById('c_avg').value),
+                        latitude: parseFloat(document.getElementById('c_lat').value),
+                        longitude: parseFloat(document.getElementById('c_lon').value),
+                        city: document.getElementById('c_city').value,
+                        days: 7 // Defaulted for structural simplicity
+                    })
+                });
+                const data = await res.json();
+                resultBox.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultBox.textContent = `Error: ${err.message}`;
+            }
+        });
+
+        // Init
+        checkHealth();
+        setInterval(checkHealth, 5000); // Poll health every 5s
+    </script>
+</body>
+</html>
