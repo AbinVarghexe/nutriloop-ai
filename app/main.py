@@ -187,8 +187,8 @@ async def predict(request: PredictRequest):
                 avg_daily_quantity=metadata.avg_daily_quantity
             )
         except Exception as e:
-            print(f"[NutriLoop] Error running global forecast: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to generate multivariate forecast: {e}")
+            print(f"[NutriLoop] CRITICAL: Error running global forecast for {request.restaurant_id}: {e}")
+            raise HTTPException(status_code=500, detail=f"Multivariate forecast error: {str(e)}")
 
         if preds_df is None or preds_df.empty:
             raise HTTPException(status_code=500, detail="Multivariate forecasting logic failed completely.")

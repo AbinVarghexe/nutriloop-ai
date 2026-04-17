@@ -75,10 +75,24 @@ CREATE TABLE IF NOT EXISTS restaurants (
     created_at timestamptz DEFAULT now()
 );
 
+-- Table: profiles
+-- Stores user profile information and app settings
+CREATE TABLE IF NOT EXISTS profiles (
+    id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email text,
+    name text,
+    role text CHECK (role IN ('restaurant', 'ngo', 'individual', 'admin')),
+    city text,
+    lat double precision,
+    lng double precision,
+    created_at timestamptz DEFAULT now()
+);
+
 -- Enable RLS
 ALTER TABLE sales_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE retrain_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE restaurants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 -- Allow anon access (adjust for production)
 CREATE POLICY "Allow anon read" ON sales_logs FOR SELECT USING (true);
@@ -87,6 +101,18 @@ CREATE POLICY "Allow anon read" ON retrain_log FOR SELECT USING (true);
 CREATE POLICY "Allow anon insert" ON retrain_log FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow anon read" ON restaurants FOR SELECT USING (true);
 CREATE POLICY "Allow anon insert" ON restaurants FOR INSERT WITH CHECK (true);
+
+-- Profile Policies
+CREATE POLICY "Users can manage their own profile" ON profiles 
+FOR ALL 
+TO authenticated 
+USING (auth.uid() = id) 
+WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Profiles are viewable by all authenticated users" ON profiles 
+FOR SELECT 
+TO authenticated 
+USING (true);
 """
 
 
